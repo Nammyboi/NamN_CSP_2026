@@ -1,0 +1,30 @@
+# Nam's summative
+import turtle as trtl
+import random
+
+wn=trtl.Screen()
+wn.setup(width=1000, height=800)
+wn.title("Nam's TV")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+wn.mainloop()
