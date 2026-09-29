@@ -20,15 +20,31 @@ def fun(x,y):
     painter.pendown()
 
     for i in range(2):
-        painter.forward(940)
+        painter.forward(900)
         painter.right(90)
-        painter.forward(500)
+        painter.forward(450)
         painter.right(90)
 
     painter.end_fill()
     painter.penup()
-    wn.update()
 
+ ################## Random shapes
+    
+ 
+shape = random.choice(shape_list)
+
+x = random.randint(-400, 400)
+ y = random.randint(-200, 200)
+painter.goto(x, y)
+
+  painter.color(random.choice(shape_colors))
+  if isinstance(shape, int):
+        painter.circle(50, 360, shape)
+  else:
+        painter.shape(shape)
+
+  wn.update()
+#####################
 
 ################ Lists ############
 bg_colors = ["red", "blue", "green", "yellow", "orange", "purple", "pink",
@@ -49,6 +65,40 @@ ground_colors = ["green", "darkgreen", "forestgreen", "limegreen", "seagreen",
     "olive", "olivedrab", "yellowgreen", "brown", "saddlebrown",
     "sienna", "chocolate", "peru", "tan", "burlywood",
     "darkgoldenrod", "goldenrod", "khaki", "wheat", "beige"]
+
+######## Stickman
+
+custom_man = (
+    (-5, 10), (5, 10),
+    (7, 7), (5, 5),
+    (5, 0), (10, -5),
+    (5, -5), (2, 0),
+    (2, -10), (7, -15),
+    (2, -12), (0, -5),
+    (-2, -12), (-7, -15),
+    (-2, -10), (-2, 0),
+    (-5, -5), (-10, -5),
+    (-5, 0), (-5, 5),
+    (-7, 7)
+)
+wn.register_shape("stickman", custom_man)
+
+
+###############
+#### Car
+
+custom_car = (
+    (-20, -8), (20, -8),
+    (20, 5), (12, 5),
+    (7, 12), (-7, 12),
+    (-12, 5), (-20, 5)
+)
+
+wn.register_shape("car", custom_car)
+
+
+
+
 
 shape_list = [3, 4, 5, 6, 7, 8, 9, 10,
     11, 12, 13, 14, 15, 16, 17, 18,
