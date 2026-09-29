@@ -6,8 +6,31 @@ wn=trtl.Screen()
 wn.setup(width=1000, height=800)
 wn.title("Nam's TV")
 
-########## Lists ########
+########## Clicking  ########
 
+def fun(x,y):
+    painter.hideturtle()
+    painter.penup()
+    wn.tracer(0)
+
+    painter.goto(-470, 310)
+    color = random.choice(bg_colors)
+    painter.color(color)
+    painter.begin_fill()
+    painter.pendown()
+
+    for i in range(2):
+        painter.forward(940)
+        painter.right(90)
+        painter.forward(500)
+        painter.right(90)
+
+    painter.end_fill()
+    painter.penup()
+    wn.update()
+
+
+################ Lists ############
 bg_colors = ["red", "blue", "green", "yellow", "orange", "purple", "pink",
     "cyan", "magenta", "lime", "gold", "silver", "coral", "tomato",
     "salmon", "plum", "violet", "indigo", "navy", "teal", "turquoise",
@@ -48,30 +71,71 @@ shape_colors = ["red", "blue", "green", "yellow",
 
 ########## TV ########
 
-tv = trtl.Turtle()
-tv.hideturtle()
-tv.penup()
+painter = trtl.Turtle()
+fun(0,0)
+'''
+painter.hideturtle()
+painter.penup()
 wn.tracer(0)
 
-tv.goto(-470, 310)
-tv.color("black")
-tv.begin_fill()
-tv.pendown()
+painter.goto(-470, 310)
+painter.color("black")
+painter.begin_fill()
+painter.pendown()
 
 for i in range(2):
-    tv.forward(940)
-    tv.right(90)
-    tv.forward(500)
-    tv.right(90)
+    painter.forward(940)
+    painter.right(90)
+    painter.forward(500)
+    painter.right(90)
 
-tv.end_fill()
-tv.penup()
+painter.end_fill()
+painter.penup()
 wn.update()
+'''
 #####################
 
+############ Remote
+
+painter.goto(-100, -200)
+painter.color("gray")
+painter.begin_fill()
+painter.pendown()
+
+for i in range(4):
+    painter.forward(115)
+    painter.right(90)
+
+painter.end_fill()
+wn.update()
+
+############## Button
+
+button = trtl.Turtle()
+button.penup()
+button.shape("circle")
+button.color("red")
+button.shapesize(3)
+button.goto(-46, -260)
+################
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+wn.update()
+wn.tracer(1)
+button.onclick(fun)
 
 
 
