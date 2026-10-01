@@ -1,8 +1,8 @@
 # Nam's summative
-battery = 100
 import turtle as trtl
 import random
 from tkinter import messagebox
+
 wn=trtl.Screen()
 wn.setup(width=1000, height=800)
 wn.title("Nam's TV")
@@ -10,6 +10,7 @@ painter = trtl.Turtle()
 ground_painter = trtl.Turtle()
 ground_painter.hideturtle()
 ground_painter.penup()
+battery = 100
 battery_painter = trtl.Turtle()
 battery_painter.hideturtle()
 battery_painter.penup()
@@ -84,47 +85,61 @@ shape_colors = ["red", "blue", "green", "yellow",
 
 
 ########################
-##### Battery
+########## Battery ########
+
 def draw_battery():
     battery_painter.clear()
 
     battery_painter.goto(300, 330)
     battery_painter.color("black")
-    battery_painter.write( "Battery: " + str(battery) + "%",)
-        
-    
+    battery_painter.write(
+        "Battery: " + str(battery) + "%",)
+
+
+########################
 ########## Clicking  ########
 
 
 def ground():
-    global ground_colors
     ground_color = random.choice(ground_colors)
+
+    print("GROUND COLOR:", ground_color)
+
     ground_painter.color(ground_color)
     ground_painter.goto(-470,-140)
     ground_painter.setheading(0)
+
     ground_painter.begin_fill()
     ground_painter.pendown()
+
     for i in range(2):
         ground_painter.forward(900)
         ground_painter.left(90)
         ground_painter.forward(100)
         ground_painter.left(90)
+
     ground_painter.end_fill()
     ground_painter.penup()
 
 
-
-
 def fun(x,y):
+
     global battery
 
-    if battery <=0:
-        messagebox.showinfo("TV no longer works")
+    if battery <= 0:
+        messagebox.showinfo("Status Update", "Remote no longer works, change the batteries")
         return
-    battery = battery - random.randint(1,10)
+			  
+    battery = battery - random.randint(1, 10)
+
+    if battery <= 0:
+        battery = 0
+        draw_battery()
+        messagebox.showinfo("TV Battery", "The TV is out of battery!")
+        return
 
     draw_battery()
-
+    
     painter.hideturtle()
     painter.penup()
     wn.tracer(0)
@@ -142,7 +157,7 @@ def fun(x,y):
     
     painter.end_fill()
     painter.penup()
-    ground()
+    
  ################## Random shapes
     
     for i in range(10):
@@ -162,7 +177,8 @@ def fun(x,y):
         else:
             painter.shape(shape)
             painter.stamp()
-    wn.update()
+
+    ground()
     
 #####################
 
@@ -220,6 +236,8 @@ button.shapesize(3)
 button.goto(-46, -260)
 ################
 
+draw_battery()
+
 wn.update()
 wn.tracer(1)
 button.onclick(fun)
@@ -228,3 +246,6 @@ fun(0,0)
 wn.update()
 
 wn.mainloop()
+
+
+
