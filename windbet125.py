@@ -9,15 +9,23 @@ grid = 4
 tile = grid * grid
 windcash = "windcash.txt"
 Nams_advantage = 0.99 
-
+bomb = rand.randint(0, 15)
 
 
 wn = trtl.Screen()
 wn.title("Wind Bet")
 
-wind_logo = ("namcsp/Wind.gif")
+wind_logo = ("Wind.gif")
+wind_bg = ("windbg.gif")
 
 wn.addshape(wind_logo)
+
+####### Draw background
+#bgpainter= trtl.Turtle()
+
+wn.bgpic("windbg.gif")
+
+
 
 ######## Draw Wind bet logo
 wpainter = trtl.Turtle()
