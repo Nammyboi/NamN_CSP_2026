@@ -3,8 +3,16 @@ import random as rand
 import tkinter as tk
 from tkinter import messagebox
 import os
+import playsound3 as ps
+from PIL import Image, ImageSequence #Pillow, changes gif size
 ########### Varibles
 os.chdir(os.path.dirname(os.path.abspath(__file__))) #makes the gifs work in parent folder
+
+########## Changes gif size(makes my life easier)
+
+
+
+
 
 grid = 4
 tile = grid * grid
@@ -12,17 +20,20 @@ windcash = "windcash.txt"
 Nams_advantage = 0.99 
 bomb = rand.randint(0, 15)
 tiles = []
+safe = 0
+playing = False
 
 
 wn = trtl.Screen()
 wn.title("Wind Bet")
-wn.setup(width=1000, height=1000)
+wn.setup(width=500, height=500)
 
 
 
 ######## Defintions
 
-#def multiplier():
+def get_multiplier():
+    return round(16 / (16 - safe), 2)
 
 
 def load_shape(filename):
@@ -69,7 +80,7 @@ for i in range(16):
 
     tile = trtl.Turtle()
     tile.shape(hidden_shapes[rand.randint(0, 2)])  # randomly choose one of the three hidden shapes
-    tile.shapesize(3.5, 3.5)           # change size of tile
+    tile.shapesize(1, 1)           # change size of tile
     tile.color("gray")
     tile.penup()
     tile.goto(-135 + col * 90, 125 - row * 90)
@@ -79,3 +90,6 @@ for i in range(16):
 
 
 wn.mainloop()
+
+
+#p.playsound()
