@@ -17,6 +17,7 @@ bomb = rand.randint(0, 15)
 tiles = []
 safe = 0
 playing = True
+cash = 0
 
 
 wn = trtl.Screen()
@@ -38,32 +39,40 @@ def load_shape(filename):
     return "square"
 
 def click_tile(index):
-
     global safe, playing, cash
-
     if not playing:
         return
+
+    # cant click same tile
+    if tiles[index]["clicked"]:
+        return
+
+    tiles[index]["clicked"] = True
 
     if index == bomb:
         print("BOOM! You lost everything!")
         cash = 0
         playing = False
+        tiles[index]["turtle"].shape(Bomb_shape)
 
     else:
         safe += 1
-
         print("DIAMOND!")
         print("Safe tiles:", safe)
         print("Multiplier:", get_multiplier())
+        tiles[index]["turtle"].shape(Diamond_shape)
 
 
 #def check_tile():
 
 
-
+################# Shapes
 wind_logo = ("Wind.gif")
 wind_bg = ("windbg.gif")
 hidden_shapes = [load_shape("tile1.gif"), load_shape("tile2.gif"), load_shape("tile3.gif")]
+Diamond_shape = load_shape("diamond.gif")
+Bomb_shape = load_shape("bomb.gif")
+
 
 
 
@@ -93,14 +102,13 @@ for i in range(16):
     col = i % 4
 
     tile = trtl.Turtle()
-    tile.shape(hidden_shapes[rand.randint(0, 2)])  # randomly choose one of the three hidden shapes
-    tile.shapesize(3.5, 3.5)           # change size of tile
-    tile.color("gray")
+    tile.shape(hidden_shapes[rand.randint(0, 2)])
     tile.penup()
     tile.goto(-135 + col * 90, 125 - row * 90)
 
     tile.onclick(lambda x, y, i=i: click_tile(i))
-    tiles.append(tile)
+
+    tiles.append({"turtle": tile,"clicked": False})
 
 
 wn.mainloop()
