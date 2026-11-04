@@ -4,7 +4,6 @@ import tkinter as tk
 from tkinter import messagebox
 from tkinter import simpledialog
 import os
-import playsound3 as ps
 
 ########### Varibles
 os.chdir(os.path.dirname(os.path.abspath(__file__))) #makes the gifs work in any folder
@@ -23,6 +22,7 @@ bet = 0
 leaderboard_open = False
 
 ######## Defintions
+###### Pretty self explantory no need for comments in this section
 
 def get_multiplier():
     return round((16 / (16 - safe)) * Nams_advantage, 2)
@@ -34,28 +34,32 @@ def load_shape(filename):
     return "square"
 
 def click_tile(index):
-    global safe, playing, cash
+    global safe, playing
     if not playing:
         return
-    # cant click same tile
     if tiles[index]["clicked"]:
         return
     tiles[index]["clicked"] = True
     if index == bomb:
-        print("BOOM! You lost everything!")
+        #print("BOOM! You lost your bet!")
         playing = False
-        tiles[index]["turtle"].shape(Bomb_shape) #makes bomb appear
+        tiles[index]["turtle"].shape(Bomb_shape)
+        earnings_writer.clear()
+        save_account()
     else:
         safe += 1
-        print("DIAMOND!")
-        print("Safe tiles:", safe)
-        print("Multiplier:", get_multiplier())
         tiles[index]["turtle"].shape(Diamond_shape)
+        #print("Safe tiles:", safe)
+        #print("Multiplier:", get_multiplier())
+        if safe == 15:
+            cash_out()
+        else:
+            update_earnings()
     wn.update()
 
 def load_account():
     global player, cash
-    player = simpledialog.askstring("Wind Bet", "Enter your name:")
+    player = simpledialog.askstring("Wind Bet", "Enter your name, use _ for spaces okay?:")
     if player == None or player == "":
         player = "Player"
     cash = 100
@@ -89,11 +93,11 @@ def start_game():
     global bet, cash, playing, safe, bomb
     if playing:
         return
-    bet = simpledialog.askfloat("Wind Bet", "How much would you like to bet?")
+    bet = simpledialog.askfloat("Wind Bet", "How much can you afford to lose?")
     if bet is None:
         return
     if bet <= 0 or bet > cash:
-        messagebox.showerror("Wind Bet", "Invalid bet!")
+        messagebox.showerror("Wind Bet", "Stop trying to bet what you don't have you chump!")
         return
     cash -= bet
     safe = 0
@@ -104,6 +108,8 @@ def start_game():
         tiles[i]["turtle"].shape(hidden_shapes[rand.randint(0, 2)])
     save_account()
     update_balance()
+    earnings_writer.clear()
+    update_earnings()
     wn.update()
 
 def cash_out():
@@ -112,13 +118,21 @@ def cash_out():
         winnings = round(bet * get_multiplier(), 2)
         cash += winnings
         playing = False
-        messagebox.showinfo("Wind Bet", "You won $" + str(winnings) + "!")
+        earnings_writer.clear()
         save_account()
         update_balance()
+        messagebox.showinfo("Wind Bet", "You got $" + str(winnings) + "!")
 
 def update_balance():
     balance_writer.clear()
     balance_writer.write("Balance: $" + str(round(cash, 2)))
+    wn.update()
+
+def update_earnings():
+    earnings_writer.clear()
+    if playing:
+        winnings = bet * get_multiplier()
+        earnings_writer.write("Earnings: $" + str(round(winnings, 2)))
     wn.update()
 
 def show_leaderboard():
@@ -146,7 +160,7 @@ def show_leaderboard():
         players.sort(key=lambda x: x[1], reverse=True)
         leaderboard_writer.color("white")
         leaderboard_writer.goto(-140, 130)
-        leaderboard_writer.write("WIND BET LEADERBOARD", font=("Arial", 18, "bold"))
+        leaderboard_writer.write("TOP TIER GAMBLERS", font=("Arial", 18, "bold"))
         ranking = 0
         for i in range(len(players)):
             if players[i][0] == player:
@@ -155,12 +169,34 @@ def show_leaderboard():
             leaderboard_writer.goto(-140, 80 - i * 35)
             leaderboard_writer.write(str(i + 1) + ". " + players[i][0] + " $" + str(round(players[i][1], 2)),font=("Arial", 14, "normal"))
         leaderboard_writer.goto(-140, -110)
-        leaderboard_writer.write("Your Ranking: #" + str(ranking), font=("Arial", 16, "bold"))
+        leaderboard_writer.write("Your Current Ranking: #" + str(ranking), font=("Arial", 16, "bold"))
     else:
         leaderboard_open = False
         leaderboard_writer.clear()
         bg_writer.clear()
     wn.update()
+
+def reset_game():
+    global playing, safe, bet
+    playing = False
+    safe = 0
+    bet = 0
+    leaderboard_writer.clear()
+    bg_writer.clear()
+    earnings_writer.clear()
+    load_account()
+    update_balance()
+    for i in range(16):
+        tiles[i]["clicked"] = False
+        tiles[i]["turtle"].shape(hidden_shapes[rand.randint(0, 2)])
+    wn.update()
+
+def troll():
+    messagebox.showinfo("Wind Bet", "😂 thx for donating to nam's hong kong buffet fund")
+    global cash
+    cash = 0
+    save_account()
+    update_balance()
 
 ##################### Screen
 wn = trtl.Screen()
@@ -191,9 +227,16 @@ update_balance()
 Iwriter = trtl.Turtle()
 Iwriter.hideturtle()
 Iwriter.penup()
-Iwriter.goto(-240, 180)
-Iwriter.color("white")
-Iwriter.write("Press 's' to start a new game\nPress 'c' to cash out your winnings\nPress 'l' to view the leaderboard", align="left", font=("Arial", 6, "bold"))
+Iwriter.goto(-240, 200)
+Iwriter.color("salmon")
+Iwriter.write("Press 's' to start a new game\nPress 'c' to cash out your winnings\nPress 'L' to view the leaderboard\nPress 'r' to reset the game\nPress 'z' to convert to real money", align="left", font=("Arial", 6, "bold"))
+
+###########Current earnings writer
+earnings_writer = trtl.Turtle()
+earnings_writer.hideturtle()
+earnings_writer.penup()
+earnings_writer.goto(-240, 180)
+earnings_writer.color("black")
 
 ################# Shapes
 wind_logo = ("Wind.gif")
@@ -233,7 +276,8 @@ wn.listen()
 wn.onkey(start_game, "s")
 wn.onkey(cash_out, "c")
 wn.onkey(show_leaderboard, "l")
-
+wn.onkey(reset_game, "r")
+wn.onkey(troll, "z")
 
 wn.mainloop()
 
